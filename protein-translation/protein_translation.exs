@@ -4,6 +4,34 @@ defmodule ProteinTranslation do
   """
   @spec of_rna(String.t()) :: { atom,  list(String.t()) }
   def of_rna(rna) do
+    codons =
+      rna
+      |> String.graphemes
+      |> Enum.chunk_every(3)
+      |> Enum.map(fn chunk -> Enum.join(chunk) end)
+      |> Enum.map(fn codon -> of_codon(codon) end)
+
+    process_codons([], codons)
+  end
+
+  def process_codons(proteins, []) do
+    proteinString =
+      proteins
+      |> Enum.reverse
+
+    {:ok, proteinString}
+  end
+
+  def process_codons(_proteins, [{:error, _} | _other]) do
+    { :error, "invalid RNA" }
+  end
+
+  def process_codons(proteins, [{:ok, "STOP"} | _other]) do
+    process_codons(proteins, [])
+  end
+
+  def process_codons(proteins, [{:ok, protein} | other]) do
+    process_codons([protein | proteins], other)
   end
 
   @doc """
