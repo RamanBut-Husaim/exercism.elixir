@@ -37,11 +37,11 @@ defmodule PigLatin do
     String.starts_with?(word, body)
   end
 
-  def transform(word, { _body, :vowel, _properties}) do
+  def transform(word, { _body, :vowel, _priority}) do
     word <> "ay"
   end
 
-  def transform(word, { body, :consonant, _properties}) do
+  def transform(word, { body, :consonant, _priority}) do
     prefix = get_consonant_prefix(word, body)
     transform_consonant(word, prefix)
   end
@@ -65,53 +65,49 @@ defmodule PigLatin do
 
   defp get_prioritized_rules() do
       get_pig_latin_rules()
-      |> Enum.sort(fn ({_, _, props1}, {_, _, props2}) -> compare_properties_by_priority(props1, props2) end)
-  end
-
-  defp compare_properties_by_priority([{_, priority1} | _], [{_, priority2} | _]) do
-    priority1 >= priority2
+      |> Enum.sort(fn ({_, _, priority: value1}, {_, _, priority: value2}) -> value1 >= value2 end)
   end
 
   defp get_pig_latin_rules() do
     [
       # consonants
-      { "b", :consonant, [priority: 1, prolongable: true]},
-      { "c", :consonant, [priority: 1, prolongable: true]},
-      { "d", :consonant, [priority: 1, prolongable: true]},
-      { "f", :consonant, [priority: 1, prolongable: true]},
-      { "g", :consonant, [priority: 1, prolongable: true]},
-      { "h", :consonant, [priority: 1, prolongable: true]},
-      { "j", :consonant, [priority: 1, prolongable: true]},
-      { "k", :consonant, [priority: 1, prolongable: true]},
-      { "l", :consonant, [priority: 1, prolongable: true]},
-      { "m", :consonant, [priority: 1, prolongable: true]},
-      { "n", :consonant, [priority: 1, prolongable: true]},
-      { "p", :consonant, [priority: 1, prolongable: true]},
-      { "q", :consonant, [priority: 1, prolongable: true]},
-      { "r", :consonant, [priority: 1, prolongable: true]},
-      { "s", :consonant, [priority: 1, prolongable: true]},
-      { "t", :consonant, [priority: 1, prolongable: true]},
-      { "v", :consonant, [priority: 1, prolongable: true]},
-      { "x", :consonant, [priority: 1, prolongable: true]},
-      { "z", :consonant, [priority: 1, prolongable: true]},
-      { "w", :consonant, [priority: 1, prolongable: true]},
-      { "y", :consonant, [priority: 1, prolongable: true]},
+      { "b", :consonant, priority: 1},
+      { "c", :consonant, priority: 1},
+      { "d", :consonant, priority: 1},
+      { "f", :consonant, priority: 1},
+      { "g", :consonant, priority: 1},
+      { "h", :consonant, priority: 1},
+      { "j", :consonant, priority: 1},
+      { "k", :consonant, priority: 1},
+      { "l", :consonant, priority: 1},
+      { "m", :consonant, priority: 1},
+      { "n", :consonant, priority: 1},
+      { "p", :consonant, priority: 1},
+      { "q", :consonant, priority: 1},
+      { "r", :consonant, priority: 1},
+      { "s", :consonant, priority: 1},
+      { "t", :consonant, priority: 1},
+      { "v", :consonant, priority: 1},
+      { "x", :consonant, priority: 1},
+      { "z", :consonant, priority: 1},
+      { "w", :consonant, priority: 1},
+      { "y", :consonant, priority: 1},
       # vowels
-      { "a", :vowel, [priority: 1, prolongable: false]},
-      { "e", :vowel, [priority: 1, prolongable: false]},
-      { "i", :vowel, [priority: 1, prolongable: false]},
-      { "o", :vowel, [priority: 1, prolongable: false]},
-      { "u", :vowel, [priority: 1, prolongable: false]},
+      { "a", :vowel, priority: 1},
+      { "e", :vowel, priority: 1},
+      { "i", :vowel, priority: 1},
+      { "o", :vowel, priority: 1},
+      { "u", :vowel, priority: 1},
       # consonant groups
-      { "ch", :consonant, [priority: 10, prolongable: false]},
-      { "qu", :consonant, [priority: 10, prolongable: false]},
-      { "squ", :consonant, [priority: 10, prolongable: false]},
-      { "th", :consonant, [priority: 10, prolongable: false]},
-      { "thr", :consonant, [priority: 10, prolongable: false]},
-      { "sch", :consonant, [priority: 10, prolongable: false]},
+      { "ch", :consonant, priority: 10},
+      { "qu", :consonant, priority: 10},
+      { "squ", :consonant, priority: 10},
+      { "th", :consonant, priority: 10},
+      { "thr", :consonant, priority: 10},
+      { "sch", :consonant, priority: 10},
       # vowels groups
-      { "yt", :vowel, [priority: 100, prolongable: false]},
-      { "xr", :vowel, [priority: 100, prolongable: false]}
+      { "yt", :vowel, priority: 100},
+      { "xr", :vowel, priority: 100}
     ]
   end
 end
