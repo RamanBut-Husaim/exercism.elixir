@@ -14,6 +14,21 @@ defmodule TwelveDays do
   """
   @spec verses(starting_verse :: integer, ending_verse :: integer) :: String.t()
   def verses(starting_verse, ending_verse) do
+    verses("", starting_verse, ending_verse)
+  end
+
+  defp verses(poem, current_verse, ending_verse) when current_verse > ending_verse do
+    String.trim(poem)
+  end
+
+  defp verses(poem, current_verse, ending_verse) when current_verse <= ending_verse do
+    new_line =
+      :io_lib.nl()
+      |> List.to_string()
+
+    verse_string = verse(current_verse)
+
+    verses(poem <> verse_string <> new_line, current_verse + 1, ending_verse)
   end
 
   @doc """
@@ -21,6 +36,7 @@ defmodule TwelveDays do
   """
   @spec sing():: String.t()
   def sing do
+    verses(1, 12)
   end
 
   defp get_numeral_for(number) do
