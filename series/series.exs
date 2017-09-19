@@ -5,7 +5,24 @@ defmodule StringSeries do
   return an empty list.
   """
   @spec slices(s :: String.t(), size :: integer) :: list(String.t())
-  def slices(_s, _size) do
+  def slices(_s, size) when size <= 0 do
+    []
+  end
+
+  def slices(s, size) do
+    slices([], String.graphemes(s), size)
+  end
+
+  defp slices(accum, graphemes, size) when length(graphemes) < size do
+    Enum.reverse(accum)
+  end
+
+  defp slices(accum, graphemes, size) do
+    segment = graphemes
+    |> Enum.take(size)
+    |> Enum.join
+
+    slices([segment | accum], Kernel.tl(graphemes), size)
   end
 end
 
