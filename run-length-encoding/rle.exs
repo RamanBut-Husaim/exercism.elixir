@@ -8,7 +8,40 @@ defmodule RunLengthEncoder do
   """
   @spec encode(String.t) :: String.t
   def encode(string) do
+    encoded = encode([], 0, String.graphemes(string))
+    to_string("", encoded)
+  end
 
+  defp encode(encoded, _counter, []) do
+    Enum.reverse(encoded)
+  end
+
+  defp encode(encoded, 0, [ a ]) do
+    encode([{a, 1} | encoded], 0, [])
+  end
+
+  defp encode(encoded, counter, [ a ]) do
+    encode([{a, counter + 1} | encoded], 0, [])
+  end
+
+  defp encode(encoded, counter, [a | [a | other]]) do
+    encode(encoded, counter + 1, [a | other])
+  end
+
+  defp encode(encoded, counter, [a | [b | other]]) do
+    encode([{a, counter + 1} | encoded], 0, [b | other])
+  end
+
+  defp to_string(encoded_string, []) do
+    encoded_string
+  end
+
+  defp to_string(encoded_string, [{a, 1} | other]) do
+    to_string(encoded_string <> a, other)
+  end
+
+  defp to_string(encoded_string, [{a, counter} | other]) do
+    to_string(encoded_string <> Integer.to_string(counter) <> a, other)
   end
 
   @spec decode(String.t) :: String.t
