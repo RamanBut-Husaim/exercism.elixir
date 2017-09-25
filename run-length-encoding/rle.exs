@@ -46,6 +46,33 @@ defmodule RunLengthEncoder do
 
   @spec decode(String.t) :: String.t
   def decode(string) do
+    decode("", String.graphemes(string))
+  end
 
+  defp decode(decoded, []) do
+    decoded
+  end
+
+  defp decode(decoded, string) do
+    {{counter, symbol}, rest} = extract_number_with_string("", string)
+
+    decoded = decoded <> String.duplicate(symbol, counter)
+
+    decode(decoded, rest)
+  end
+
+  defp extract_number_with_string(number_string, [symbol | other]) do
+    case String.match?(symbol, ~r/[0-9]+/) do
+      true -> extract_number_with_string(number_string <> symbol, other)
+      _ -> {{parse_number(number_string), symbol}, other}
+    end
+  end
+
+  defp parse_number("") do
+    1
+  end
+
+  defp parse_number(number_string) do
+    String.to_integer(number_string)
   end
 end
