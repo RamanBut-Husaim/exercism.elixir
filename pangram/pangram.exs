@@ -14,5 +14,19 @@ defmodule Pangram do
 
   @spec pangram?(String.t) :: boolean
   def pangram?(sentence) do
+    alphabet_set = get_alphabet_set()
+
+    sentence
+    |> String.downcase
+    |> String.graphemes
+    |> MapSet.new
+    |> MapSet.intersection(alphabet_set)
+    |> MapSet.equal?(alphabet_set)
+  end
+
+  defp get_alphabet_set() do
+    alphabet = for n <- ?a..?z, do: << n :: utf8 >>
+
+    MapSet.new(alphabet)
   end
 end
