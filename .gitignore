@@ -56,3 +56,10 @@ fabric.properties
 erl_crash.dump
 *.ez
 *.beam
+
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
