@@ -1,52 +1,88 @@
 defmodule LinkedList do
   @opaque t :: tuple()
 
+  defstruct head: nil, length: 0
+
+  defmodule LinkedListEntry do
+    @enforce_keys [:data]
+    defstruct data: nil, next: nil
+  end
+
   @doc """
   Construct a new LinkedList
   """
   @spec new() :: t
   def new() do
-    # Your implementation here...
+    %LinkedList{}
   end
 
   @doc """
   Push an item onto a LinkedList
   """
   @spec push(t, any()) :: t
-  def push(list, elem) do
-    # Your implementation here...
+  def push(%LinkedList{head: head, length: length}, elem) do
+    new_head = %LinkedListEntry{data: elem, next: head}
+    %LinkedList{head: new_head, length: length + 1}
   end
 
   @doc """
   Calculate the length of a LinkedList
   """
   @spec length(t) :: non_neg_integer()
-  def length(list) do
-    # Your implementation here...
+  def length(%LinkedList{length: length}) do
+    length
   end
 
   @doc """
   Determine if a LinkedList is empty
   """
   @spec empty?(t) :: boolean()
-  def empty?(list) do
-    # Your implementation here...
+  def empty?(%LinkedList{length: length}) do
+    length === 0
   end
 
   @doc """
   Get the value of a head of the LinkedList
   """
   @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
-  def peek(list) do
-    # Your implementation here...
+  def peek(%LinkedList{head: nil}) do
+    {:error, :empty_list}
+  end
+
+  @doc """
+  Get the value of a head of the LinkedList
+  """
+  @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
+  def peek(%LinkedList{head: %LinkedListEntry{data: data}}) do
+    {:ok, data}
+  end
+
+
+  @doc """
+  Get tail of a LinkedList
+  """
+  @spec tail(t) :: {:ok, t} | {:error, :empty_list}
+  def tail(%LinkedList{head: nil}) do
+    {:error, :empty_list}
   end
 
   @doc """
   Get tail of a LinkedList
   """
   @spec tail(t) :: {:ok, t} | {:error, :empty_list}
-  def tail(list) do
-    # Your implementation here...
+  def tail(%LinkedList{head: %LinkedListEntry{next: next} = head, length: length}) do
+    case next do
+      nil -> {:ok, LinkedList.new()}
+      _ -> {:ok, %LinkedList{head: next, length: length - 1}}
+    end
+  end
+
+  defp get_tail(%LinkedListEntry{next: nil} = tail) do
+    nil
+  end
+
+  defp get_tail(%LinkedListEntry{next: next}) do
+    next
   end
 
   @doc """
