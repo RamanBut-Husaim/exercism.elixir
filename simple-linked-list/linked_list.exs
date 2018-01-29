@@ -1,6 +1,4 @@
 defmodule LinkedList do
-  @opaque t :: tuple()
-
   defstruct head: nil, length: 0
 
   defmodule LinkedListEntry do
@@ -11,7 +9,7 @@ defmodule LinkedList do
   @doc """
   Construct a new LinkedList
   """
-  @spec new() :: t
+  @spec new() :: %LinkedList{}
   def new() do
     %LinkedList{}
   end
@@ -19,7 +17,7 @@ defmodule LinkedList do
   @doc """
   Push an item onto a LinkedList
   """
-  @spec push(t, any()) :: t
+  @spec push(%LinkedList{}, any()) :: %LinkedList{}
   def push(%LinkedList{head: head, length: length}, elem) do
     new_head = %LinkedListEntry{data: elem, next: head}
     %LinkedList{head: new_head, length: length + 1}
@@ -28,7 +26,7 @@ defmodule LinkedList do
   @doc """
   Calculate the length of a LinkedList
   """
-  @spec length(t) :: non_neg_integer()
+  @spec length(%LinkedList{}) :: non_neg_integer()
   def length(%LinkedList{length: length}) do
     length
   end
@@ -36,7 +34,7 @@ defmodule LinkedList do
   @doc """
   Determine if a LinkedList is empty
   """
-  @spec empty?(t) :: boolean()
+  @spec empty?(%LinkedList{}) :: boolean()
   def empty?(%LinkedList{length: length}) do
     length === 0
   end
@@ -44,7 +42,7 @@ defmodule LinkedList do
   @doc """
   Get the value of a head of the LinkedList
   """
-  @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
+  @spec peek(%LinkedList{}) :: {:ok, any()} | {:error, :empty_list}
   def peek(%LinkedList{head: nil}) do
     {:error, :empty_list}
   end
@@ -52,7 +50,7 @@ defmodule LinkedList do
   @doc """
   Get the value of a head of the LinkedList
   """
-  @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
+  @spec peek(%LinkedList{}) :: {:ok, any()} | {:error, :empty_list}
   def peek(%LinkedList{head: %LinkedListEntry{data: data}}) do
     {:ok, data}
   end
@@ -61,7 +59,7 @@ defmodule LinkedList do
   @doc """
   Get tail of a LinkedList
   """
-  @spec tail(t) :: {:ok, t} | {:error, :empty_list}
+  @spec tail(%LinkedList{}) :: {:ok, %LinkedList{}} | {:error, :empty_list}
   def tail(%LinkedList{head: nil}) do
     {:error, :empty_list}
   end
@@ -69,7 +67,7 @@ defmodule LinkedList do
   @doc """
   Get tail of a LinkedList
   """
-  @spec tail(t) :: {:ok, t} | {:error, :empty_list}
+  @spec tail(%LinkedList{}) :: {:ok, %LinkedList{}} | {:error, :empty_list}
   def tail(%LinkedList{head: %LinkedListEntry{next: next}, length: length}) do
     case next do
       nil -> {:ok, LinkedList.new()}
@@ -80,7 +78,7 @@ defmodule LinkedList do
   @doc """
   Remove the head from a LinkedList
   """
-  @spec pop(t) :: {:ok, any(), t} | {:error, :empty_list}
+  @spec pop(%LinkedList{}) :: {:ok, any(), %LinkedList{}} | {:error, :empty_list}
   def pop(%LinkedList{head: nil}) do
     {:error, :empty_list}
   end
@@ -93,7 +91,7 @@ defmodule LinkedList do
   @doc """
   Construct a LinkedList from a stdlib List
   """
-  @spec from_list(list()) :: t
+  @spec from_list(list()) :: %LinkedList{}
   def from_list(list) do
     list
     |> Enum.reverse
@@ -107,7 +105,7 @@ defmodule LinkedList do
   @doc """
   Construct a stdlib List LinkedList from a LinkedList
   """
-  @spec to_list(t) :: list()
+  @spec to_list(%LinkedList{}) :: list()
   def to_list(%LinkedList{head: head}) do
     to_list(head, [])
   end
@@ -123,7 +121,7 @@ defmodule LinkedList do
   @doc """
   Reverse a LinkedList
   """
-  @spec reverse(t) :: t
+  @spec reverse(%LinkedList{}) :: %LinkedList{}
   def reverse(list) do
     list
     |> LinkedList.to_list
