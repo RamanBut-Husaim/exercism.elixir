@@ -70,27 +70,24 @@ defmodule LinkedList do
   Get tail of a LinkedList
   """
   @spec tail(t) :: {:ok, t} | {:error, :empty_list}
-  def tail(%LinkedList{head: %LinkedListEntry{next: next} = head, length: length}) do
+  def tail(%LinkedList{head: %LinkedListEntry{next: next}, length: length}) do
     case next do
       nil -> {:ok, LinkedList.new()}
       _ -> {:ok, %LinkedList{head: next, length: length - 1}}
     end
   end
 
-  defp get_tail(%LinkedListEntry{next: nil} = tail) do
-    nil
-  end
-
-  defp get_tail(%LinkedListEntry{next: next}) do
-    next
-  end
-
   @doc """
   Remove the head from a LinkedList
   """
   @spec pop(t) :: {:ok, any(), t} | {:error, :empty_list}
-  def pop(list) do
-    # Your implementation here...
+  def pop(%LinkedList{head: nil}) do
+    {:error, :empty_list}
+  end
+
+  def pop(%LinkedList{head: %LinkedListEntry{data: data}} = list) do
+    {:ok, tail} = LinkedList.tail(list)
+    {:ok, data, tail}
   end
 
   @doc """
@@ -98,15 +95,29 @@ defmodule LinkedList do
   """
   @spec from_list(list()) :: t
   def from_list(list) do
-    # Your implementation here...
+    list
+    |> Enum.reverse
+    |> Enum.reduce(LinkedList.new(), fn(x, acc) -> LinkedList.push(acc, x) end)
+  end
+
+  defp from_list([], list) do
+    list
   end
 
   @doc """
   Construct a stdlib List LinkedList from a LinkedList
   """
   @spec to_list(t) :: list()
-  def to_list(list) do
-    # Your implementation here...
+  def to_list(%LinkedList{head: head}) do
+    to_list(head, [])
+  end
+
+  defp to_list(nil, list) do
+    Enum.reverse(list)
+  end
+
+  defp to_list(%LinkedListEntry{next: next, data: data}, list) do
+    to_list(next, [data | list])
   end
 
   @doc """
@@ -114,6 +125,9 @@ defmodule LinkedList do
   """
   @spec reverse(t) :: t
   def reverse(list) do
-    # Your implementation here...
+    list
+    |> LinkedList.to_list
+    |> Enum.reverse
+    |> LinkedList.from_list
   end
 end
